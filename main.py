@@ -40,70 +40,17 @@ class RekruteScraper:
         self.db_path = db_path
         self.max_workers = max_workers
 
-
-    def _init_driver(self, headless: bool = True):
-        chrome_opts = Options()
-
-        # --- Essential options for headless/containerized environments ---
+    def _init_driver(headless=True):
+        opts = Options()
         if headless:
-            chrome_opts.add_argument("--headless=new")  # Use the new headless mode
-            chrome_opts.add_argument("--disable-gpu")   # Often recommended for headless
-        
-        chrome_opts.add_argument("--no-sandbox")        # Crucial for running in containers like Streamlit Cloud
-        chrome_opts.add_argument("--disable-dev-shm-usage") # Overcomes limited resource problems in containers
-        
-        # --- Optional but often useful options ---
-        chrome_opts.add_argument("--window-size=1920,1080") # Define a virtual display size
-        chrome_opts.add_argument("--disable-blink-features=AutomationControlled") # Helps avoid bot detection
-        chrome_opts.add_argument("--start-maximized") # Could be useful
-        chrome_opts.add_argument("--disable-extensions") # Disable extensions
-        chrome_opts.add_argument("--disable-infobars") # Disable "Chrome is being controlled by..."
-        chrome_opts.add_argument("--remote-debugging-port=9222") # Can be useful for debugging headless if needed
-
-        # --- Point to the browser installed by packages.txt ---
-        # This tells Selenium/WebDriverManager which browser executable to consider.
-        # Adjust the path if you installed a different package (e.g., google-chrome-stable)
-        # Common paths for browsers installed via apt:
-        browser_executable_path = ""
-        common_paths = ["/usr/bin/chromium-browser", "/usr/bin/chromium", "/usr/bin/google-chrome-stable", "/usr/bin/google-chrome"]
-        
-        import os
-        for path in common_paths:
-            if os.path.exists(path):
-                browser_executable_path = path
-                break
-                
-        if browser_executable_path:
-            chrome_opts.binary_location = browser_executable_path
-            # print(f"INFO: Using browser binary at: {browser_executable_path}") # For debugging
-        else:
-            # print("WARNING: Browser executable not found at common paths. Relying on WebDriver to find it.")
-            # This is less ideal, as WebDriverManager might not pick the intended browser
-            pass
-
-        # --- Initialize ChromeDriver using WebDriverManager ---
-        # WebDriverManager will attempt to download a chromedriver compatible with
-        # the browser found (ideally the one specified by binary_location or in PATH).
-        # Since packages.txt should have installed all necessary shared libraries,
-        # the downloaded chromedriver should now run without the 'exit code 127' error.
-        try:
-            service = Service(ChromeDriverManager().install())
-        except Exception as e:
-            # Handle potential errors from ChromeDriverManager (e.g., network issues during download)
-            # print(f"ERROR: ChromeDriverManager().install() failed: {e}")
-            # As a last resort, if you also included 'chromium-driver' in packages.txt,
-            # you could try to use the system-installed chromedriver.
-            # This assumes 'chromium-driver' from apt is compatible with 'chromium-browser'.
-            chromedriver_sys_path = "/usr/bin/chromedriver" # Common path for system chromedriver
-            if os.path.exists(chromedriver_sys_path) and browser_executable_path: # Ensure browser is also set
-                # print(f"INFO: Falling back to system chromedriver at: {chromedriver_sys_path}")
-                service = Service(executable_path=chromedriver_sys_path)
-            else:
-                # print(f"ERROR: System chromedriver not found at {chromedriver_sys_path} or browser binary not set. Cannot initialize driver.")
-                raise  # Re-raise the original exception from ChromeDriverManager
-
-        return webdriver.Chrome(service=service, options=chrome_opts)
-
+            opts.add_argument("--headless=new")
+            opts.add_argument("--disable-gpu")
+        opts.add_argument("--no-sandbox")
+        opts.add_argument("--disable-dev-shm-usage")
+        opts.binary_location = "/usr/bin/chromium"   # Streamlit’s chromium
+        # Nothing else – Selenium Manager handles the driver
+        return webdriver.Chrome(options=opts)
+    
     def get_page_urls(self):
         logger.info("Fetching pagination URLs")
         driver = self._init_driver()
