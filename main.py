@@ -204,6 +204,7 @@ with tab1:
             df = scraper.scrape_all(show_logs_callback=update_logs)
             new = scraper.save_to_db(df)
         st.success(f"Done: {new} new records")
+#fhjlkfd
 
 if has_data:
     with tab2:
