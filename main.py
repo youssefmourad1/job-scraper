@@ -205,7 +205,6 @@ with tab1:
             new = scraper.save_to_db(df)
         st.success(f"Done: {new} new records")
 
-# Data & Dashboard
 if has_data:
     with tab2:
         st.subheader("Offers")
