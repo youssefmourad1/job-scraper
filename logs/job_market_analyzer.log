@@ -1,0 +1,63 @@
+2025-06-06 18:32:09,642 - root - INFO - Logging system initialized
+2025-06-06 18:35:09,606 - root - INFO - Logging system initialized
+2025-06-06 18:35:09,641 - config.database - INFO - Database initialized successfully
+2025-06-06 18:35:09,642 - config.database - INFO - Database initialized successfully
+2025-06-06 18:35:22,955 - analytics.data_processor - INFO - Loading and cleaning job market data
+2025-06-06 18:35:22,957 - analytics.data_processor - WARNING - No data found in database
+2025-06-06 18:35:33,535 - root - INFO - Logging system initialized
+2025-06-06 18:35:36,482 - root - INFO - Logging system initialized
+2025-06-06 18:35:37,103 - root - INFO - Logging system initialized
+2025-06-06 18:35:39,615 - root - INFO - Logging system initialized
+2025-06-06 18:35:40,277 - root - INFO - Logging system initialized
+2025-06-06 18:35:40,474 - root - INFO - Logging system initialized
+2025-06-06 18:35:40,730 - root - INFO - Logging system initialized
+2025-06-06 18:35:41,303 - root - INFO - Logging system initialized
+2025-06-06 18:35:41,527 - root - INFO - Logging system initialized
+2025-06-06 18:35:42,111 - root - INFO - Logging system initialized
+2025-06-06 18:35:42,804 - root - INFO - Logging system initialized
+2025-06-06 18:35:43,386 - root - INFO - Logging system initialized
+2025-06-06 18:35:44,635 - root - INFO - Logging system initialized
+2025-06-06 18:35:44,639 - config.database - INFO - Database initialized successfully
+2025-06-06 18:35:44,639 - scrapers - INFO - Initialized Rekrute scraper
+2025-06-06 18:35:44,639 - config.database - INFO - Database initialized successfully
+2025-06-06 18:35:44,639 - scrapers - INFO - Initialized MarocAnnonce scraper
+2025-06-06 18:35:44,640 - scrapers - INFO - Starting scraping session for Rekrute
+2025-06-06 18:35:44,640 - scrapers - ERROR - Scraping session failed for Rekrute: '_GeneratorContextManager' object does not support the asynchronous context manager protocol
+2025-06-06 18:35:44,640 - scrapers - INFO - Starting scraping session for MarocAnnonce
+2025-06-06 18:35:44,640 - scrapers.maroc_annonce - INFO - Generated 100 page URLs for MarocAnnonce
+2025-06-06 18:35:44,640 - scrapers - INFO - Found 10 pages to scrape
+2025-06-06 18:35:52,237 - scrapers - WARNING - HTTP 404 for https://www.marocannonces.com/categorie/309/Offres-emploi/annonce/9846086/Commerciale-en-digital-grand-comptes-b2b-bac5.html
+2025-06-06 18:35:54,309 - scrapers - WARNING - HTTP 404 for https://www.marocannonces.com/categorie/309/Offres-emploi/annonce/9846086/Commerciale-en-digital-grand-comptes-b2b-bac5.html
+2025-06-06 18:35:57,385 - scrapers - WARNING - HTTP 404 for https://www.marocannonces.com/categorie/309/Offres-emploi/annonce/9846086/Commerciale-en-digital-grand-comptes-b2b-bac5.html
+2025-06-06 18:36:14,690 - scrapers - INFO - Completed 1/10 pages, found 20 jobs
+2025-06-06 18:36:16,027 - scrapers - INFO - Completed 2/10 pages, found 20 jobs
+2025-06-06 18:36:16,062 - scrapers - INFO - Completed 3/10 pages, found 20 jobs
+2025-06-06 18:36:16,073 - scrapers - INFO - Completed 4/10 pages, found 20 jobs
+2025-06-06 18:36:16,130 - scrapers - INFO - Completed 5/10 pages, found 20 jobs
+2025-06-06 18:36:16,251 - scrapers - INFO - Completed 6/10 pages, found 20 jobs
+2025-06-06 18:36:16,380 - scrapers - INFO - Completed 7/10 pages, found 20 jobs
+2025-06-06 18:36:21,133 - scrapers - INFO - Completed 8/10 pages, found 20 jobs
+2025-06-06 18:36:45,596 - scrapers - INFO - Completed 9/10 pages, found 20 jobs
+2025-06-06 18:36:47,515 - scrapers - INFO - Completed 10/10 pages, found 20 jobs
+2025-06-06 18:36:47,620 - scrapers - INFO - Database stats: {'new': 200, 'updated': 0, 'total': 200}
+2025-06-06 18:36:47,620 - scrapers - INFO - Completed scraping session for MarocAnnonce: 200 new jobs, 0 updated jobs, 1 errors
+2025-06-06 18:42:38,710 - root - INFO - Logging system initialized
+2025-06-06 18:42:46,293 - analytics.data_processor - INFO - Loading and cleaning job market data
+2025-06-06 18:42:46,297 - analytics.data_processor - INFO - Loaded 200 job records
+2025-06-06 18:42:46,335 - analytics.data_processor - INFO - Removed 0 duplicate records
+2025-06-06 18:47:20,021 - root - INFO - Logging system initialized
+2025-06-06 18:47:20,026 - config.database - INFO - Database initialized successfully
+2025-06-06 18:47:20,027 - config.database - INFO - Database initialized successfully
+2025-06-06 18:47:20,031 - analytics.data_processor - INFO - Loading and cleaning job market data
+2025-06-06 18:47:20,034 - analytics.data_processor - INFO - Loaded 200 job records
+2025-06-06 18:47:20,062 - analytics.data_processor - INFO - Removed 0 duplicate records
+2025-06-06 18:47:23,031 - root - INFO - Logging system initialized
+2025-06-06 18:47:23,039 - analytics.data_processor - INFO - Loading and cleaning job market data
+2025-06-06 18:47:23,046 - analytics.data_processor - INFO - Loaded 200 job records
+2025-06-06 18:47:23,085 - analytics.data_processor - INFO - Removed 0 duplicate records
+2025-06-06 18:47:28,853 - root - INFO - Logging system initialized
+2025-06-06 18:47:29,994 - config.database - INFO - Database initialized successfully
+2025-06-06 18:47:29,994 - config.database - INFO - Database initialized successfully
+2025-06-06 18:47:29,997 - analytics.data_processor - INFO - Loading and cleaning job market data
+2025-06-06 18:47:29,999 - analytics.data_processor - INFO - Loaded 200 job records
+2025-06-06 18:47:30,023 - analytics.data_processor - INFO - Removed 0 duplicate records
