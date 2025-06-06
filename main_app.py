@@ -9,7 +9,9 @@ from typing import Dict
 
 # Setup
 from utils.logger import setup_logging
+import logging
 setup_logging()
+logger = logging.getLogger(__name__)
 
 try:
     from config.database import DatabaseManager
@@ -104,13 +106,14 @@ def main():
         try:
             if hasattr(st.session_state, 'db_manager') and st.session_state.db_manager:
                 stats = st.session_state.db_manager.get_market_stats()
-                st.metric("Total Jobs", format_number(stats['total_jobs']))
-                st.metric("Companies", format_number(stats['unique_companies']))
-                st.metric("This Week", format_number(stats['jobs_last_week']))
+                st.metric("Total Jobs", format_number(stats.get('total_jobs', 0)))
+                st.metric("Companies", format_number(stats.get('unique_companies', 0)))
+                st.metric("This Week", format_number(stats.get('jobs_last_week', 0)))
             else:
                 st.info("No data available yet")
         except Exception as e:
             st.error(f"Error loading stats: {str(e)}")
+            logger.error(f"Sidebar stats error: {e}")
     
     # Main content
     if page == "📊 Dashboard":
@@ -146,30 +149,48 @@ def show_dashboard():
             
             # Load and display basic analytics
             if hasattr(st.session_state, 'data_processor') and st.session_state.data_processor:
-                df = st.session_state.data_processor.load_and_clean_data()
-                if not df.empty:
-                    st.markdown("### 📈 Recent Activity")
-                    
-                    # Basic charts
-                    import plotly.express as px
-                    
-                    col1, col2 = st.columns(2)
-                    
-                    with col1:
-                        if 'source' in df.columns:
-                            source_counts = df['source'].value_counts()
-                            fig = px.pie(values=source_counts.values, names=source_counts.index, 
-                                       title="Jobs by Source")
-                            st.plotly_chart(fig, use_container_width=True)
-                    
-                    with col2:
-                        if 'location' in df.columns:
-                            location_counts = df['location'].value_counts().head(10)
-                            fig = px.bar(x=location_counts.values, y=location_counts.index,
-                                       orientation='h', title="Top Locations")
-                            st.plotly_chart(fig, use_container_width=True)
-                else:
-                    st.info("No data available. Please run the scrapers first.")
+                try:
+                    df = st.session_state.data_processor.load_and_clean_data()
+                    if not df.empty:
+                        st.markdown("### 📈 Recent Activity")
+                        
+                        # Basic charts
+                        import plotly.express as px
+                        
+                        col1, col2 = st.columns(2)
+                        
+                        with col1:
+                            try:
+                                if 'source' in df.columns:
+                                    # Ensure data is clean for charts
+                                    source_data = df['source'].dropna().value_counts()
+                                    if not source_data.empty:
+                                        fig = px.pie(values=source_data.values, names=source_data.index, 
+                                                   title="Jobs by Source")
+                                        st.plotly_chart(fig, use_container_width=True)
+                                    else:
+                                        st.info("No source data available")
+                            except Exception as e:
+                                st.error(f"Error creating source chart: {str(e)}")
+                        
+                        with col2:
+                            try:
+                                if 'location' in df.columns:
+                                    # Clean location data
+                                    location_data = df['location'].dropna().value_counts().head(10)
+                                    if not location_data.empty:
+                                        fig = px.bar(x=location_data.values, y=location_data.index,
+                                                   orientation='h', title="Top Locations")
+                                        st.plotly_chart(fig, use_container_width=True)
+                                    else:
+                                        st.info("No location data available")
+                            except Exception as e:
+                                st.error(f"Error creating location chart: {str(e)}")
+                    else:
+                        st.info("No data available. Please run the scrapers first.")
+                except Exception as e:
+                    st.error(f"Error loading data: {str(e)}")
+                    st.info("This might be due to empty data or data processing issues. Try running the scrapers first.")
             else:
                 st.warning("Data processor not available.")
         else:

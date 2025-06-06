@@ -61,3 +61,184 @@
 2025-06-06 18:47:29,997 - analytics.data_processor - INFO - Loading and cleaning job market data
 2025-06-06 18:47:29,999 - analytics.data_processor - INFO - Loaded 200 job records
 2025-06-06 18:47:30,023 - analytics.data_processor - INFO - Removed 0 duplicate records
+2025-06-06 18:50:12,377 - root - INFO - Logging system initialized
+2025-06-06 18:50:13,442 - config.database - INFO - Database initialized successfully
+2025-06-06 18:50:13,442 - config.database - INFO - Database initialized successfully
+2025-06-06 18:50:13,445 - analytics.data_processor - INFO - Loading and cleaning job market data
+2025-06-06 18:50:13,446 - analytics.data_processor - INFO - Loaded 200 job records
+2025-06-06 18:50:13,472 - analytics.data_processor - INFO - Removed 0 duplicate records
+2025-06-06 18:50:13,477 - analytics.data_processor - INFO - Cleaned data: 200 records remaining
+2025-06-06 18:50:22,830 - root - INFO - Logging system initialized
+2025-06-06 18:50:27,625 - root - INFO - Logging system initialized
+2025-06-06 18:50:31,362 - root - INFO - Logging system initialized
+2025-06-06 18:50:31,378 - config.database - INFO - Database initialized successfully
+2025-06-06 18:50:31,378 - scrapers - INFO - Initialized Rekrute scraper
+2025-06-06 18:50:31,379 - config.database - INFO - Database initialized successfully
+2025-06-06 18:50:31,379 - scrapers - INFO - Initialized MarocAnnonce scraper
+2025-06-06 18:50:31,380 - scrapers - INFO - Starting scraping session for Rekrute
+2025-06-06 18:50:31,380 - scrapers - ERROR - Scraping session failed for Rekrute: '_GeneratorContextManager' object does not support the asynchronous context manager protocol
+2025-06-06 18:50:31,381 - scrapers - INFO - Starting scraping session for MarocAnnonce
+2025-06-06 18:50:31,381 - scrapers.maroc_annonce - INFO - Generated 100 page URLs for MarocAnnonce
+2025-06-06 18:50:31,381 - scrapers - INFO - Found 5 pages to scrape
+2025-06-06 18:51:01,353 - scrapers - INFO - Completed 1/5 pages, found 20 jobs
+2025-06-06 18:51:02,443 - scrapers - INFO - Completed 2/5 pages, found 20 jobs
+2025-06-06 18:51:02,849 - scrapers - INFO - Completed 3/5 pages, found 20 jobs
+2025-06-06 18:51:02,886 - scrapers - INFO - Completed 4/5 pages, found 20 jobs
+2025-06-06 18:51:03,317 - scrapers - INFO - Completed 5/5 pages, found 20 jobs
+2025-06-06 18:51:03,358 - scrapers - INFO - Database stats: {'new': 0, 'updated': 100, 'total': 100}
+2025-06-06 18:51:03,359 - scrapers - INFO - Completed scraping session for MarocAnnonce: 0 new jobs, 100 updated jobs, 0 errors
+2025-06-06 18:51:38,217 - root - INFO - Logging system initialized
+2025-06-06 18:51:38,221 - analytics.data_processor - INFO - Loading and cleaning job market data
+2025-06-06 18:51:38,226 - analytics.data_processor - INFO - Loaded 200 job records
+2025-06-06 18:51:38,269 - analytics.data_processor - INFO - Removed 0 duplicate records
+2025-06-06 18:51:38,274 - analytics.data_processor - INFO - Cleaned data: 200 records remaining
+2025-06-06 18:51:40,144 - root - INFO - Logging system initialized
+2025-06-06 18:51:40,150 - analytics.data_processor - INFO - Loading and cleaning job market data
+2025-06-06 18:51:40,157 - analytics.data_processor - INFO - Loaded 200 job records
+2025-06-06 18:51:40,196 - analytics.data_processor - INFO - Removed 0 duplicate records
+2025-06-06 18:51:40,200 - analytics.data_processor - INFO - Cleaned data: 200 records remaining
+2025-06-06 18:51:53,413 - root - INFO - Logging system initialized
+2025-06-06 18:51:53,422 - analytics.data_processor - INFO - Loading and cleaning job market data
+2025-06-06 18:51:53,428 - analytics.data_processor - INFO - Loaded 200 job records
+2025-06-06 18:51:53,472 - analytics.data_processor - INFO - Removed 0 duplicate records
+2025-06-06 18:51:53,475 - analytics.data_processor - INFO - Cleaned data: 200 records remaining
+2025-06-06 18:52:25,311 - root - INFO - Logging system initialized
+2025-06-06 18:52:25,319 - analytics.data_processor - INFO - Loading and cleaning job market data
+2025-06-06 18:52:25,325 - analytics.data_processor - INFO - Loaded 200 job records
+2025-06-06 18:52:25,363 - analytics.data_processor - INFO - Removed 0 duplicate records
+2025-06-06 18:52:25,365 - analytics.data_processor - INFO - Cleaned data: 200 records remaining
+2025-06-06 18:52:47,734 - root - INFO - Logging system initialized
+2025-06-06 18:52:48,816 - config.database - INFO - Database initialized successfully
+2025-06-06 18:52:48,816 - config.database - INFO - Database initialized successfully
+2025-06-06 18:52:48,819 - analytics.data_processor - INFO - Loading and cleaning job market data
+2025-06-06 18:52:48,821 - analytics.data_processor - INFO - Loaded 200 job records
+2025-06-06 18:52:48,846 - analytics.data_processor - INFO - Removed 0 duplicate records
+2025-06-06 18:52:48,851 - analytics.data_processor - INFO - Cleaned data: 200 records remaining
+2025-06-06 18:52:54,916 - root - INFO - Logging system initialized
+2025-06-06 18:52:57,146 - root - INFO - Logging system initialized
+2025-06-06 18:52:57,163 - config.database - INFO - Database initialized successfully
+2025-06-06 18:52:57,164 - scrapers - INFO - Initialized Rekrute scraper
+2025-06-06 18:52:57,164 - config.database - INFO - Database initialized successfully
+2025-06-06 18:52:57,165 - scrapers - INFO - Initialized MarocAnnonce scraper
+2025-06-06 18:52:57,165 - scrapers - INFO - Starting scraping session for Rekrute
+2025-06-06 18:52:58,841 - scrapers.rekrute - INFO - Found 100 page URLs for Rekrute
+2025-06-06 18:52:58,943 - scrapers - INFO - Found 5 pages to scrape
+2025-06-06 18:53:02,228 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:02,271 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:02,275 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:02,289 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:02,290 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:03,852 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:03,917 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:03,925 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:03,930 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:03,944 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:05,446 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:05,485 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:05,509 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:05,514 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:05,564 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:07,090 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:07,110 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:07,150 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:07,161 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:07,204 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:08,669 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:08,709 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:08,725 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:08,771 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:08,835 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:10,299 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:10,366 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:10,392 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:10,392 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:10,477 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:11,934 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:11,988 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:12,005 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:12,010 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:12,102 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:13,551 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:13,551 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:13,624 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:13,626 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:13,667 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:15,151 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:15,167 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:15,204 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:15,213 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:15,223 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:16,772 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:16,772 - scrapers - INFO - Completed 1/5 pages, found 0 jobs
+2025-06-06 18:53:16,797 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:16,798 - scrapers - INFO - Completed 2/5 pages, found 0 jobs
+2025-06-06 18:53:16,807 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:16,807 - scrapers - INFO - Completed 3/5 pages, found 0 jobs
+2025-06-06 18:53:16,817 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:16,817 - scrapers - INFO - Completed 4/5 pages, found 0 jobs
+2025-06-06 18:53:16,826 - scrapers - ERROR - Error processing job details: NaTType does not support strftime
+2025-06-06 18:53:16,826 - scrapers - INFO - Completed 5/5 pages, found 0 jobs
+2025-06-06 18:53:16,828 - scrapers - INFO - Completed scraping session for Rekrute: 0 new jobs, 0 updated jobs, 50 errors
+2025-06-06 18:53:16,828 - scrapers - INFO - Starting scraping session for MarocAnnonce
+2025-06-06 18:53:16,828 - scrapers.maroc_annonce - INFO - Generated 100 page URLs for MarocAnnonce
+2025-06-06 18:53:16,828 - scrapers - INFO - Found 5 pages to scrape
+2025-06-06 18:53:46,207 - scrapers - INFO - Completed 1/5 pages, found 20 jobs
+2025-06-06 18:53:46,454 - scrapers - INFO - Completed 2/5 pages, found 20 jobs
+2025-06-06 18:53:47,306 - scrapers - INFO - Completed 3/5 pages, found 20 jobs
+2025-06-06 18:53:47,324 - scrapers - INFO - Completed 4/5 pages, found 20 jobs
+2025-06-06 18:53:47,498 - scrapers - INFO - Completed 5/5 pages, found 20 jobs
+2025-06-06 18:53:47,544 - scrapers - INFO - Database stats: {'new': 0, 'updated': 100, 'total': 100}
+2025-06-06 18:53:47,545 - scrapers - INFO - Completed scraping session for MarocAnnonce: 0 new jobs, 100 updated jobs, 0 errors
+2025-06-06 18:55:16,995 - root - INFO - Logging system initialized
+2025-06-06 18:55:18,141 - config.database - INFO - Database initialized successfully
+2025-06-06 18:55:18,142 - config.database - INFO - Database initialized successfully
+2025-06-06 18:55:18,145 - analytics.data_processor - INFO - Loading and cleaning job market data
+2025-06-06 18:55:18,146 - analytics.data_processor - INFO - Loaded 200 job records
+2025-06-06 18:55:18,172 - analytics.data_processor - INFO - Removed 0 duplicate records
+2025-06-06 18:55:18,176 - analytics.data_processor - INFO - Cleaned data: 200 records remaining
+2025-06-06 18:55:22,621 - root - INFO - Logging system initialized
+2025-06-06 18:55:24,124 - root - INFO - Logging system initialized
+2025-06-06 18:55:24,137 - config.database - INFO - Database initialized successfully
+2025-06-06 18:55:24,138 - scrapers - INFO - Initialized Rekrute scraper
+2025-06-06 18:55:24,139 - config.database - INFO - Database initialized successfully
+2025-06-06 18:55:24,139 - scrapers - INFO - Initialized MarocAnnonce scraper
+2025-06-06 18:55:24,140 - scrapers - INFO - Starting scraping session for Rekrute
+2025-06-06 18:55:25,630 - scrapers.rekrute - INFO - Found 100 page URLs for Rekrute
+2025-06-06 18:55:25,714 - scrapers - INFO - Found 5 pages to scrape
+2025-06-06 18:55:43,386 - scrapers - INFO - Completed 1/5 pages, found 10 jobs
+2025-06-06 18:55:43,414 - scrapers - INFO - Completed 2/5 pages, found 10 jobs
+2025-06-06 18:55:43,538 - scrapers - INFO - Completed 3/5 pages, found 10 jobs
+2025-06-06 18:55:43,545 - scrapers - INFO - Completed 4/5 pages, found 10 jobs
+2025-06-06 18:55:43,581 - scrapers - INFO - Completed 5/5 pages, found 10 jobs
+2025-06-06 18:55:43,605 - scrapers - INFO - Database stats: {'new': 50, 'updated': 0, 'total': 50}
+2025-06-06 18:55:43,606 - scrapers - INFO - Completed scraping session for Rekrute: 50 new jobs, 0 updated jobs, 0 errors
+2025-06-06 18:55:43,607 - scrapers - INFO - Starting scraping session for MarocAnnonce
+2025-06-06 18:55:43,607 - scrapers.maroc_annonce - INFO - Generated 100 page URLs for MarocAnnonce
+2025-06-06 18:55:43,607 - scrapers - INFO - Found 5 pages to scrape
+2025-06-06 18:56:14,099 - scrapers - INFO - Completed 1/5 pages, found 20 jobs
+2025-06-06 18:56:15,281 - scrapers - INFO - Completed 2/5 pages, found 20 jobs
+2025-06-06 18:56:15,304 - scrapers - INFO - Completed 3/5 pages, found 20 jobs
+2025-06-06 18:56:15,754 - scrapers - INFO - Completed 4/5 pages, found 20 jobs
+2025-06-06 18:56:15,883 - scrapers - INFO - Completed 5/5 pages, found 20 jobs
+2025-06-06 18:56:15,933 - scrapers - INFO - Database stats: {'new': 0, 'updated': 100, 'total': 100}
+2025-06-06 18:56:15,933 - scrapers - INFO - Completed scraping session for MarocAnnonce: 0 new jobs, 100 updated jobs, 0 errors
+2025-06-06 18:56:50,900 - root - INFO - Logging system initialized
+2025-06-06 18:56:50,909 - analytics.data_processor - INFO - Loading and cleaning job market data
+2025-06-06 18:56:50,913 - analytics.data_processor - INFO - Loaded 250 job records
+2025-06-06 18:56:50,955 - analytics.data_processor - INFO - Removed 0 duplicate records
+2025-06-06 18:56:50,959 - analytics.data_processor - INFO - Cleaned data: 250 records remaining
+2025-06-06 18:56:57,089 - root - INFO - Logging system initialized
+2025-06-06 18:56:57,094 - analytics.data_processor - INFO - Loading and cleaning job market data
+2025-06-06 18:56:57,099 - analytics.data_processor - INFO - Loaded 250 job records
+2025-06-06 18:56:57,138 - analytics.data_processor - INFO - Removed 0 duplicate records
+2025-06-06 18:56:57,142 - analytics.data_processor - INFO - Cleaned data: 250 records remaining
+2025-06-06 18:57:00,498 - root - INFO - Logging system initialized
+2025-06-06 18:57:00,505 - analytics.data_processor - INFO - Loading and cleaning job market data
+2025-06-06 18:57:00,513 - analytics.data_processor - INFO - Loaded 250 job records
+2025-06-06 18:57:00,557 - analytics.data_processor - INFO - Removed 0 duplicate records
+2025-06-06 18:57:00,560 - analytics.data_processor - INFO - Cleaned data: 250 records remaining
+2025-06-06 18:57:05,003 - root - INFO - Logging system initialized
+2025-06-06 18:57:05,012 - analytics.data_processor - INFO - Loading and cleaning job market data
+2025-06-06 18:57:05,019 - analytics.data_processor - INFO - Loaded 250 job records
+2025-06-06 18:57:05,061 - analytics.data_processor - INFO - Removed 0 duplicate records
+2025-06-06 18:57:05,064 - analytics.data_processor - INFO - Cleaned data: 250 records remaining

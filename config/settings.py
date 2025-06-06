@@ -87,7 +87,13 @@ LOGGING_CONFIG = {
 DATA_CLEANING_CONFIG = {
     'text_fields': ['title', 'description', 'company', 'location'],
     'remove_duplicates_fields': ['title', 'company', 'url'],
-    'date_formats': ['%Y-%m-%d', '%d/%m/%Y', '%d-%m-%Y'],
+    'date_formats': [
+        '%Y-%m-%d', '%d/%m/%Y', '%d-%m-%Y',
+        '%d %m %Y', '%d.%m.%Y', '%Y/%m/%d',
+        '%d-%b-%Y', '%d %b %Y', '%d/%b/%Y',
+        '%B %d, %Y', '%d %B %Y', '%Y-%m-%d %H:%M:%S',
+        '%d/%m/%Y %H:%M', '%d-%m-%Y %H:%M:%S'
+    ],
     'stop_words_languages': ['french', 'english'],
     'min_text_length': 3
 } 

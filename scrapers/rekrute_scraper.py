@@ -26,38 +26,37 @@ class RekruteScraper(BaseScraper):
     
     async def get_page_urls(self) -> List[str]:
         """Get all pagination URLs from the main page"""
-        async with self.db_manager.get_connection() as conn:
-            async with aiohttp.ClientSession() as session:
-                main_page_content = await self.make_request(session, self.base_url)
-                
-                if not main_page_content:
-                    logger.error("Failed to fetch main page")
-                    return []
-                
-                soup = BeautifulSoup(main_page_content, 'html.parser')
-                page_urls = []
-                
-                # Find pagination container
-                pagination = soup.find('span', class_='jobs')
-                if pagination:
-                    select_element = pagination.find('select')
-                    if select_element:
-                        options = select_element.find_all('option')
-                        
-                        for option in options:
-                            value = option.get('value', '')
-                            if value and value.startswith('/'):
-                                # Construct full URL
-                                full_url = urljoin(self.base_url, value)
-                                # Clean up any duplicate path segments
-                                full_url = re.sub(r'/fr/fr/', '/fr/', full_url)
-                                
-                                if validate_url(full_url):
-                                    page_urls.append(full_url)
-                                    logger.debug(f"Found page URL: {full_url}")
-                
-                logger.info(f"Found {len(page_urls)} page URLs for Rekrute")
-                return page_urls or [self.base_url]  # Return at least the main page
+        async with aiohttp.ClientSession() as session:
+            main_page_content = await self.make_request(session, self.base_url)
+            
+            if not main_page_content:
+                logger.error("Failed to fetch main page")
+                return []
+            
+            soup = BeautifulSoup(main_page_content, 'html.parser')
+            page_urls = []
+            
+            # Find pagination container
+            pagination = soup.find('span', class_='jobs')
+            if pagination:
+                select_element = pagination.find('select')
+                if select_element:
+                    options = select_element.find_all('option')
+                    
+                    for option in options:
+                        value = option.get('value', '')
+                        if value and value.startswith('/'):
+                            # Construct full URL
+                            full_url = urljoin(self.base_url, value)
+                            # Clean up any duplicate path segments
+                            full_url = re.sub(r'/fr/fr/', '/fr/', full_url)
+                            
+                            if validate_url(full_url):
+                                page_urls.append(full_url)
+                                logger.debug(f"Found page URL: {full_url}")
+            
+            logger.info(f"Found {len(page_urls)} page URLs for Rekrute")
+            return page_urls or [self.base_url]  # Return at least the main page
     
     async def scrape_job_listings(self, page_url: str) -> List[Dict]:
         """Scrape job listings from a single page"""

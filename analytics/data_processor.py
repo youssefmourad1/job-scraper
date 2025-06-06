@@ -341,21 +341,29 @@ class DataProcessor:
         
         for col in categorical_columns:
             if col in df.columns:
+                # Convert to string and handle missing values
+                df[col] = df[col].astype(str).fillna('Unknown')
+                
                 if col not in self.label_encoders:
                     self.label_encoders[col] = LabelEncoder()
-                
-                # Handle new categories
-                unique_values = df[col].unique()
-                known_values = getattr(self.label_encoders[col], 'classes_', [])
-                
-                if len(known_values) == 0:
                     df[f'{col}_encoded'] = self.label_encoders[col].fit_transform(df[col])
                 else:
-                    # Handle unknown categories
-                    df[f'{col}_encoded'] = df[col].apply(
-                        lambda x: self.label_encoders[col].transform([x])[0] 
-                        if x in known_values else -1
-                    )
+                    # Handle new categories safely
+                    unique_values = df[col].unique()
+                    known_values = set(self.label_encoders[col].classes_)
+                    
+                    # Add new categories to the encoder
+                    new_categories = set(unique_values) - known_values
+                    if new_categories:
+                        all_categories = list(known_values) + list(new_categories)
+                        self.label_encoders[col].classes_ = np.array(all_categories)
+                    
+                    # Transform with proper error handling
+                    try:
+                        df[f'{col}_encoded'] = self.label_encoders[col].transform(df[col])
+                    except ValueError:
+                        # Fallback: refit the encoder with all current data
+                        df[f'{col}_encoded'] = self.label_encoders[col].fit_transform(df[col])
         
         return df
     

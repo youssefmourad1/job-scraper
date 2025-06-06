@@ -56,6 +56,8 @@ def parse_date(date_str: str) -> Optional[datetime]:
         return None
     
     date_str = str(date_str).strip()
+    if not date_str or date_str.lower() in ['nan', 'none', '', 'null']:
+        return None
     
     # Try different date formats
     for date_format in DATA_CLEANING_CONFIG['date_formats']:
@@ -66,7 +68,11 @@ def parse_date(date_str: str) -> Optional[datetime]:
     
     # Try pandas date parser as fallback
     try:
-        return pd.to_datetime(date_str, errors='coerce')
+        parsed_date = pd.to_datetime(date_str, errors='coerce')
+        if pd.isna(parsed_date):
+            return None
+        # Convert pandas Timestamp to Python datetime
+        return parsed_date.to_pydatetime() if hasattr(parsed_date, 'to_pydatetime') else parsed_date
     except:
         return None
 

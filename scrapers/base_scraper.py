@@ -4,6 +4,7 @@ Base scraper class with optimized parallel processing
 import asyncio
 import aiohttp
 import time
+import pandas as pd
 from abc import ABC, abstractmethod
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
@@ -139,7 +140,13 @@ class BaseScraper(ABC):
         
         # Parse date
         date_posted = parse_date(raw_job_data.get('date_posted', ''))
-        processed_data['date_posted'] = date_posted.strftime('%Y-%m-%d') if date_posted else None
+        if date_posted and not pd.isna(date_posted):
+            try:
+                processed_data['date_posted'] = date_posted.strftime('%Y-%m-%d')
+            except (AttributeError, ValueError):
+                processed_data['date_posted'] = None
+        else:
+            processed_data['date_posted'] = None
         
         return processed_data
     
