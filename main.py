@@ -304,477 +304,147 @@ def run_scraping_session(rekrute_enabled: bool, maroc_enabled: bool, max_pages: 
             st.info("🏢 Scraping MarocAnnonces.com...")
         
         try:
-            maroc_scraper = MarocAnnonceScraper()
-            
-            def update_progress(completed, total, jobs_found):
-                progress = (current_scraper + completed/total) / total_scrapers
-                progress_bar.progress(progress)
-                status_text.text(f"MarocAnnonces: {completed}/{total} pages, {jobs_found} jobs found")
-            
-            session = maroc_scraper.run_sync(max_pages, update_progress)
-            results['MarocAnnonces'] = {
-                'status': session.status,
-                'new_jobs': session.new_jobs,
-                'total_jobs': session.total_jobs,
-                'errors': session.errors
-            }
-            
-        except Exception as e:
-            results['MarocAnnonces'] = {'status': 'failed', 'error': str(e)}
-        
-        current_scraper += 1
-    
-    # Complete progress
-    progress_bar.progress(1.0)
-    status_text.text("✅ Scraping completed!")
-    
-    # Display results
-    display_scraping_results(results)
-    
-    st.session_state.scraping_in_progress = False
-    st.session_state.last_scraping_results = results
 
-def display_scraping_results(results: Dict):
-    """Display scraping session results"""
-    st.markdown("### 📋 Scraping Results")
-    
-    for source, result in results.items():
-        if result['status'] == 'completed':
-            st.markdown(f"""
-            <div class="status-success">
-                <strong>✅ {source}</strong><br>
-                New jobs: {result['new_jobs']} | Total processed: {result['total_jobs']} | Errors: {result['errors']}
-            </div>
-            """, unsafe_allow_html=True)
-        else:
-            error_msg = result.get('error', 'Unknown error')
-            st.markdown(f"""
-            <div class="status-warning">
-                <strong>⚠️ {source}</strong><br>
-                Status: {result['status']} | Error: {error_msg}
-            </div>
-            """, unsafe_allow_html=True)
+            driver.get(url)
+            wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "li.post-id")))
+            items = driver.find_elements(By.CSS_SELECTOR, "li.post-id")
+            logger.info(f"Worker {idx}: found {len(items)} items")
+            for li in items:
+                try:
+                    pid = li.get_attribute("id")
+                    sec = li.find_element(By.CSS_SELECTOR, "div.col-sm-10.col-xs-12")
+                    title_el = sec.find_element(By.CSS_SELECTOR, "a.titreJob")
+                    record = {
+                        "post_id": pid,
+                        "title": title_el.text.strip(),
+                        "url": title_el.get_attribute("href"),
+                        "likes": sec.find_element(By.CSS_SELECTOR, "a.addlikebtns span").text.strip(),
+                        "company_desc": sec.find_elements(By.CSS_SELECTOR, "div.info span")[0].text.strip() if sec.find_elements(By.CSS_SELECTOR, "div.info span") else "",
+                        "mission_desc": sec.find_elements(By.CSS_SELECTOR, "div.info span")[1].text.strip() if len(sec.find_elements(By.CSS_SELECTOR, "div.info span"))>1 else "",
+                        "pub_start": "", "pub_end": "", "posts_proposed": "",
+                        "sector": "", "fonction": "", "experience": "",
+                        "study_level": "", "contract_type": "", "telework": ""
+                    }
+                    spans = sec.find_elements(By.CSS_SELECTOR, "em.date span")
+                    if spans:
+                        record['pub_start'] = spans[0].text.strip()
+                        if len(spans)>1:
+                            record['pub_end'] = spans[1].text.strip()
+                        if len(spans)>2:
+                            record['posts_proposed'] = spans[2].text.strip()
+                    for li2 in sec.find_elements(By.CSS_SELECTOR, "div.info ul li"):
+                        txt = li2.text.strip()
+                        if txt.startswith("Secteur"):
+                            record['sector'] = ", ".join(a.text for a in li2.find_elements(By.TAG_NAME, "a"))
+                        elif txt.startswith("Fonction"):
+                            record['fonction'] = ", ".join(a.text for a in li2.find_elements(By.TAG_NAME, "a"))
+                        elif "Expérience requise" in txt:
+                            record['experience'] = li2.find_element(By.TAG_NAME, "a").text.strip()
+                        elif "Niveau d'étude" in txt:
+                            record['study_level'] = li2.find_element(By.TAG_NAME, "a").text.strip()
+                        elif "Type de contrat proposé" in txt:
+                            record['contract_type'] = li2.find_element(By.TAG_NAME, "a").text.strip()
+                            if "Télétravail" in txt:
+                                record['telework'] = txt.split("Télétravail")[-1].split(":")[-1].strip()
+                    records.append(record)
+                    logger.info(f"Worker {idx}: scraped {pid}")
+                except Exception as e:
+                    logger.error(f"Worker {idx}: parse error: {e}")
+        except TimeoutException:
+            logger.error(f"Worker {idx}: timeout on {url}")
+        finally:
+            driver.quit()
+        return records
 
-def display_analytics_dashboard():
-    """Display the analytics dashboard"""
-    st.markdown('<h2 class="section-header">📈 Market Analytics</h2>', unsafe_allow_html=True)
-    
-    # Load and process data
-    with st.spinner("Loading and processing data..."):
-        df = data_processor.load_and_clean_data()
-    
-    if df.empty:
-        st.warning("No data available. Please run the scrapers first.")
-        return
-    
-    # Date filter
-    st.markdown("### 📅 Filter Data")
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        days_filter = st.selectbox(
-            "Time Period", 
-            [7, 30, 60, 90, 365], 
-            index=1,
-            format_func=lambda x: f"Last {x} days"
+    def scrape_all(self, show_logs_callback=None):
+        urls = self.get_page_urls()
+        total = len(urls)
+        records = []
+        with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
+            future_to_idx = {executor.submit(self._scrape_page, url, i+1, total): i for i, url in enumerate(urls)}
+            for future in as_completed(future_to_idx):
+                page_records = future.result()
+                records.extend(page_records)
+                if show_logs_callback:
+                    show_logs_callback(log_stream.getvalue())
+        return pd.DataFrame(records)
+
+    def save_to_db(self, df: pd.DataFrame):
+        conn = sqlite3.connect(self.db_path)
+        c = conn.cursor()
+        c.execute(
+            """
+            CREATE TABLE IF NOT EXISTS jobs(
+                post_id TEXT PRIMARY KEY,
+                title TEXT, url TEXT, likes TEXT,
+                company_desc TEXT, mission_desc TEXT,
+                pub_start TEXT, pub_end TEXT, posts_proposed TEXT,
+                sector TEXT, fonction TEXT, experience TEXT,
+                study_level TEXT, contract_type TEXT, telework TEXT
+            )"""
         )
-    
-    with col2:
-        source_filter = st.multiselect(
-            "Data Sources",
-            options=df['source'].unique(),
-            default=df['source'].unique()
-        )
-    
-    # Apply filters
-    date_filter = get_date_range_filter(days_filter)
-    if source_filter:
-        df = df[df['source'].isin(source_filter)]
-    
-    # Display visualizations
-    display_job_distribution_charts(df)
-    display_market_trends_charts(df)
-    display_skills_analysis(df)
-    display_salary_analysis(df)
+        existing = {row[0] for row in c.execute("SELECT post_id FROM jobs").fetchall()}
+        new_df = df[~df['post_id'].isin(existing)]
+        new_count = len(new_df)
+        if new_count:
+            new_df.to_sql('jobs', conn, if_exists='append', index=False)
+        conn.close()
+        logger.info(f"Inserted {new_count} new records")
+        return new_count
 
-def display_job_distribution_charts(df: pd.DataFrame):
-    """Display job distribution visualizations"""
-    st.markdown("### 🗺️ Job Distribution")
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        # Source distribution
-        if 'source' in df.columns:
-            source_counts = df['source'].value_counts()
-            fig_source = px.pie(
-                values=source_counts.values,
-                names=source_counts.index,
-                title="Jobs by Source",
-                color_discrete_sequence=px.colors.qualitative.Set3
-            )
-            fig_source.update_layout(height=400)
-            st.plotly_chart(fig_source, use_container_width=True)
-    
-    with col2:
-        # Location distribution
-        if 'location' in df.columns:
-            location_counts = df['location'].value_counts().head(10)
-            fig_location = px.bar(
-                x=location_counts.values,
-                y=location_counts.index,
-                orientation='h',
-                title="Top 10 Locations",
-                color=location_counts.values,
-                color_continuous_scale="viridis"
-            )
-            fig_location.update_layout(height=400)
-            st.plotly_chart(fig_location, use_container_width=True)
-    
-    # Sector distribution
-    if 'sector' in df.columns:
-        sector_counts = df['sector'].value_counts().head(15)
-        fig_sector = px.treemap(
-            names=sector_counts.index,
-            values=sector_counts.values,
-            title="Job Distribution by Sector"
-        )
-        fig_sector.update_layout(height=500)
-        st.plotly_chart(fig_sector, use_container_width=True)
+# ----------------------
+# Streamlit App
+# ----------------------
+st.title("Rekrute.com Job Scraper")
+DB_PATH = "jobs.db"
+scraper = RekruteScraper(base_url="https://www.rekrute.com/fr/offres.html?s=3&p=1&o=1",
+                        db_path=DB_PATH, max_workers=5)
 
-def display_market_trends_charts(df: pd.DataFrame):
-    """Display market trends visualizations"""
-    st.markdown("### 📊 Market Trends")
-    
-    if 'date_posted' in df.columns:
-        # Daily job postings
-        daily_posts = df.groupby(df['date_posted'].dt.date).size()
-        fig_daily = px.line(
-            x=daily_posts.index,
-            y=daily_posts.values,
-            title="Daily Job Postings Trend",
-            labels={'x': 'Date', 'y': 'Number of Posts'}
-        )
-        fig_daily.update_layout(height=400)
-        st.plotly_chart(fig_daily, use_container_width=True)
-        
-        # Weekly trends by sector
-        if 'sector' in df.columns:
-            df['week'] = df['date_posted'].dt.to_period('W')
-            weekly_sector = df.groupby(['week', 'sector']).size().reset_index(name='count')
-            weekly_sector['week'] = weekly_sector['week'].astype(str)
-            
-            top_sectors = df['sector'].value_counts().head(5).index
-            weekly_sector_filtered = weekly_sector[weekly_sector['sector'].isin(top_sectors)]
-            
-            fig_weekly = px.line(
-                weekly_sector_filtered,
-                x='week',
-                y='count',
-                color='sector',
-                title="Weekly Job Postings by Top Sectors",
-                labels={'week': 'Week', 'count': 'Number of Posts'}
-            )
-            fig_weekly.update_layout(height=400)
-            st.plotly_chart(fig_weekly, use_container_width=True)
+# Check for existing data
+has_data = False
+if os.path.exists(DB_PATH):
+    try:
+        df_db = pd.read_sql("SELECT * FROM jobs", sqlite3.connect(DB_PATH))
+        has_data = not df_db.empty
+    except:
+        has_data = False
 
-def display_skills_analysis(df: pd.DataFrame):
-    """Display skills analysis"""
-    st.markdown("### 🎯 Skills Analysis")
-    
-    if 'extracted_skills' in df.columns:
-        # Most demanded skills
-        all_skills = []
-        for skills_list in df['extracted_skills'].dropna():
-            if isinstance(skills_list, list):
-                all_skills.extend(skills_list)
-        
-        if all_skills:
-            skill_counts = pd.Series(all_skills).value_counts().head(20)
-            
-            fig_skills = px.bar(
-                x=skill_counts.values,
-                y=skill_counts.index,
-                orientation='h',
-                title="Top 20 Most Demanded Skills",
-                color=skill_counts.values,
-                color_continuous_scale="plasma"
-            )
-            fig_skills.update_layout(height=600, yaxis={'categoryorder':'total ascending'})
-            st.plotly_chart(fig_skills, use_container_width=True)
+# Tabs setup
+if has_data:
+    tab1, tab2 = st.tabs(["Launch Scrape", "Data & Dashboard"])
+else:
+    tab1 = st.container()
 
-def display_salary_analysis(df: pd.DataFrame):
-    """Display salary analysis"""
-    st.markdown("### 💰 Salary Analysis")
-    
-    if 'salary_avg' in df.columns and df['salary_avg'].notna().sum() > 0:
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            # Salary distribution
-            fig_salary_dist = px.histogram(
-                df.dropna(subset=['salary_avg']),
-                x='salary_avg',
-                title="Salary Distribution",
-                nbins=20
-            )
-            fig_salary_dist.update_layout(height=400)
-            st.plotly_chart(fig_salary_dist, use_container_width=True)
-        
-        with col2:
-            # Salary by experience
-            if 'experience_category' in df.columns:
-                salary_exp = df.dropna(subset=['salary_avg', 'experience_category'])
-                if not salary_exp.empty:
-                    fig_salary_exp = px.box(
-                        salary_exp,
-                        x='experience_category',
-                        y='salary_avg',
-                        title="Salary by Experience Level"
-                    )
-                    fig_salary_exp.update_layout(height=400)
-                    st.plotly_chart(fig_salary_exp, use_container_width=True)
+# Scraping UI
+with tab1:
+    scraper.base_url = st.text_input("Base URL", scraper.base_url)
+    log_placeholder = st.empty()
+    if st.button("Launch Scraping"):
+        log_stream.truncate(0)
+        log_stream.seek(0)
+        def update_logs(txt):
+            log_placeholder.text(txt)
+        with st.spinner("Scraping pages in parallel…"):
+            df = scraper.scrape_all(show_logs_callback=update_logs)
+            new = scraper.save_to_db(df)
+        st.success(f"Done: {new} new records")
+#fhjlkfd
 
-def main():
-    """Main application function"""
-    init_session_state()
-    
-    # Display header
-    display_dashboard_header()
-    
-    # Sidebar navigation
-    with st.sidebar:
-        st.markdown("## 🎛️ Navigation")
-        page = st.radio(
-            "Select Page",
-            ["📊 Dashboard", "🔄 Data Collection", "📈 Analytics", "📋 Data Management"],
-            key="navigation"
+if has_data:
+    with tab2:
+        st.subheader("Offers")
+        st.dataframe(df_db)
+        st.download_button("Download DB",
+                           data=open(DB_PATH, 'rb'),
+                           file_name="jobs.db")
+        st.subheader("Dashboard")
+        st.metric("Total Offers", len(df_db))
+        sector_chart = alt.Chart(df_db).mark_bar().encode(
+            x=alt.X('sector', sort='-y'), y='count()'
         )
-        
-        st.markdown("---")
-        st.markdown("## 📊 Quick Stats")
-        stats = db_manager.get_market_stats()
-        st.metric("Total Jobs", format_number(stats['total_jobs']))
-        st.metric("Companies", format_number(stats['unique_companies']))
-        st.metric("This Week", format_number(stats['jobs_last_week']))
-    
-    # Main content based on navigation
-    if page == "📊 Dashboard":
-        display_key_metrics()
-        st.markdown("---")
-        display_analytics_dashboard()
-    
-    elif page == "🔄 Data Collection":
-        display_scraping_interface()
-    
-    elif page == "📈 Analytics":
-        display_analytics_dashboard()
-    
-    elif page == "📋 Data Management":
-        display_data_management()
+        st.altair_chart(sector_chart, use_container_width=True)
+        func_chart = alt.Chart(df_db).mark_bar().encode(
+            x=alt.X('fonction', sort='-y'), y='count()'
+        )
+        st.altair_chart(func_chart, use_container_width=True)
 
-def display_data_management():
-    """Display data management interface"""
-    st.markdown('<h2 class="section-header">📋 Data Management</h2>', unsafe_allow_html=True)
-    
-    # Load data
-    df = data_processor.load_and_clean_data()
-    
-    if df.empty:
-        st.warning("No data available.")
-        return
-    
-    # Data overview
-    st.markdown("### 📊 Data Overview")
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        st.metric("Total Records", len(df))
-    with col2:
-        st.metric("Data Sources", df['source'].nunique())
-    with col3:
-        memory_usage = df.memory_usage(deep=True).sum() / 1024**2
-        st.metric("Memory Usage", f"{memory_usage:.1f} MB")
-    
-    # Data sample
-    st.markdown("### 🔍 Data Sample")
-    st.dataframe(df.head(100), use_container_width=True, height=400)
-    
-    # Export options
-    st.markdown("### 📥 Export Data")
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        # CSV export
-        csv = df.to_csv(index=False)
-        st.download_button(
-            label="📊 Download CSV",
-            data=csv,
-            file_name=f"job_data_{datetime.now().strftime('%Y%m%d')}.csv",
-            mime="text/csv"
-        )
-    
-    with col2:
-        # Excel export
-        excel_buffer = io.BytesIO()
-        with pd.ExcelWriter(excel_buffer, engine='xlsxwriter') as writer:
-            df.to_excel(writer, sheet_name='Jobs', index=False)
-        
-        st.download_button(
-            label="📋 Download Excel",
-            data=excel_buffer.getvalue(),
-            file_name=f"job_data_{datetime.now().strftime('%Y%m%d')}.xlsx",
-            mime="application/vnd.ms-excel"
-        )
-    
-    with col3:
-        # JSON export
-        json_data = df.to_json(orient='records', indent=2)
-        st.download_button(
-            label="📄 Download JSON",
-            data=json_data,
-            file_name=f"job_data_{datetime.now().strftime('%Y%m%d')}.json",
-            mime="application/json"
-        )
-
-                color_continuous_scale="plasma"
-            )
-            fig_skills.update_layout(height=600, yaxis={'categoryorder':'total ascending'})
-            st.plotly_chart(fig_skills, use_container_width=True)
-
-def display_salary_analysis(df: pd.DataFrame):
-    """Display salary analysis"""
-    st.markdown("### 💰 Salary Analysis")
-    
-    if 'salary_avg' in df.columns and df['salary_avg'].notna().sum() > 0:
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            # Salary distribution
-            fig_salary_dist = px.histogram(
-                df.dropna(subset=['salary_avg']),
-                x='salary_avg',
-                title="Salary Distribution",
-                nbins=20
-            )
-            fig_salary_dist.update_layout(height=400)
-            st.plotly_chart(fig_salary_dist, use_container_width=True)
-        
-        with col2:
-            # Salary by experience
-            if 'experience_category' in df.columns:
-                salary_exp = df.dropna(subset=['salary_avg', 'experience_category'])
-                if not salary_exp.empty:
-                    fig_salary_exp = px.box(
-                        salary_exp,
-                        x='experience_category',
-                        y='salary_avg',
-                        title="Salary by Experience Level"
-                    )
-                    fig_salary_exp.update_layout(height=400)
-                    st.plotly_chart(fig_salary_exp, use_container_width=True)
-
-def main():
-    """Main application function"""
-    init_session_state()
-    
-    # Display header
-    display_dashboard_header()
-    
-    # Sidebar navigation
-    with st.sidebar:
-        st.markdown("## 🎛️ Navigation")
-        page = st.radio(
-            "Select Page",
-            ["📊 Dashboard", "🔄 Data Collection", "📈 Analytics", "📋 Data Management"],
-            key="navigation"
-        )
-        
-        st.markdown("---")
-        st.markdown("## 📊 Quick Stats")
-        stats = db_manager.get_market_stats()
-        st.metric("Total Jobs", format_number(stats['total_jobs']))
-        st.metric("Companies", format_number(stats['unique_companies']))
-        st.metric("This Week", format_number(stats['jobs_last_week']))
-    
-    # Main content based on navigation
-    if page == "📊 Dashboard":
-        display_key_metrics()
-        st.markdown("---")
-        display_analytics_dashboard()
-    
-    elif page == "🔄 Data Collection":
-        display_scraping_interface()
-    
-    elif page == "📈 Analytics":
-        display_analytics_dashboard()
-    
-    elif page == "📋 Data Management":
-        display_data_management()
-
-def display_data_management():
-    """Display data management interface"""
-    st.markdown('<h2 class="section-header">📋 Data Management</h2>', unsafe_allow_html=True)
-    
-    # Load data
-    df = data_processor.load_and_clean_data()
-    
-    if df.empty:
-        st.warning("No data available.")
-        return
-    
-    # Data overview
-    st.markdown("### 📊 Data Overview")
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        st.metric("Total Records", len(df))
-    with col2:
-        st.metric("Data Sources", df['source'].nunique())
-    with col3:
-        memory_usage = df.memory_usage(deep=True).sum() / 1024**2
-        st.metric("Memory Usage", f"{memory_usage:.1f} MB")
-    
-    # Data sample
-    st.markdown("### 🔍 Data Sample")
-    st.dataframe(df.head(100), use_container_width=True, height=400)
-    
-    # Export options
-    st.markdown("### 📥 Export Data")
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        # CSV export
-        csv = df.to_csv(index=False)
-        st.download_button(
-            label="📊 Download CSV",
-            data=csv,
-            file_name=f"job_data_{datetime.now().strftime('%Y%m%d')}.csv",
-            mime="text/csv"
-        )
-    
-    with col2:
-        # Excel export
-        excel_buffer = io.BytesIO()
-        with pd.ExcelWriter(excel_buffer, engine='xlsxwriter') as writer:
-            df.to_excel(writer, sheet_name='Jobs', index=False)
-        
-        st.download_button(
-            label="📋 Download Excel",
-            data=excel_buffer.getvalue(),
-            file_name=f"job_data_{datetime.now().strftime('%Y%m%d')}.xlsx",
-            mime="application/vnd.ms-excel"
-        )
-    
-    with col3:
-        # JSON export
-        json_data = df.to_json(orient='records', indent=2)
-        st.download_button(
-            label="📄 Download JSON",
-            data=json_data,
-            file_name=f"job_data_{datetime.now().strftime('%Y%m%d')}.json",
-            mime="application/json"
-        )
-
-if __name__ == "__main__":
-    main() 
