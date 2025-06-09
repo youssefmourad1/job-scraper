@@ -245,7 +245,7 @@ def display_scraping_interface():
     if not st.session_state.scraping_in_progress:
         if st.button("🔥 Start Data Collection", type="primary", use_container_width=True):
             run_scraping_session(rekrute_enabled, maroc_enabled, max_pages)
-    else:
+                else:
         st.markdown("""
         <div class="status-info">
             <strong>🔄 Scraping in Progress...</strong><br>

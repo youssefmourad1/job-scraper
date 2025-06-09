@@ -242,3 +242,81 @@
 2025-06-06 18:57:05,019 - analytics.data_processor - INFO - Loaded 250 job records
 2025-06-06 18:57:05,061 - analytics.data_processor - INFO - Removed 0 duplicate records
 2025-06-06 18:57:05,064 - analytics.data_processor - INFO - Cleaned data: 250 records remaining
+2025-06-06 20:56:25,058 - root - INFO - Logging system initialized
+2025-06-06 20:56:26,710 - config.database - INFO - Database initialized successfully
+2025-06-06 20:56:26,711 - config.database - INFO - Database initialized successfully
+2025-06-06 20:56:26,716 - analytics.data_processor - INFO - Loading and cleaning job market data
+2025-06-06 20:56:26,718 - analytics.data_processor - INFO - Loaded 250 job records
+2025-06-06 20:56:26,750 - analytics.data_processor - INFO - Removed 0 duplicate records
+2025-06-06 20:56:26,755 - analytics.data_processor - INFO - Cleaned data: 250 records remaining
+2025-06-06 21:09:18,626 - root - INFO - Logging system initialized
+2025-06-06 21:09:29,957 - root - INFO - Logging system initialized
+2025-06-06 21:09:29,964 - analytics.data_processor - INFO - Loading and cleaning job market data
+2025-06-06 21:09:29,973 - analytics.data_processor - INFO - Loaded 250 job records
+2025-06-06 21:09:30,010 - analytics.data_processor - INFO - Removed 0 duplicate records
+2025-06-06 21:09:30,014 - analytics.data_processor - INFO - Cleaned data: 250 records remaining
+2025-06-06 21:09:31,921 - root - INFO - Logging system initialized
+2025-06-06 21:09:35,814 - root - INFO - Logging system initialized
+2025-06-06 21:09:38,524 - root - INFO - Logging system initialized
+2025-06-06 21:09:39,382 - root - INFO - Logging system initialized
+2025-06-06 21:09:41,162 - root - INFO - Logging system initialized
+2025-06-06 21:09:41,628 - root - INFO - Logging system initialized
+2025-06-06 21:09:47,355 - root - INFO - Logging system initialized
+2025-06-06 21:09:52,957 - root - INFO - Logging system initialized
+2025-06-06 21:09:52,962 - analytics.data_processor - INFO - Loading and cleaning job market data
+2025-06-06 21:09:52,968 - analytics.data_processor - INFO - Loaded 250 job records
+2025-06-06 21:09:53,006 - analytics.data_processor - INFO - Removed 0 duplicate records
+2025-06-06 21:09:53,010 - analytics.data_processor - INFO - Cleaned data: 250 records remaining
+2025-06-06 21:10:03,954 - root - INFO - Logging system initialized
+2025-06-06 21:10:03,959 - analytics.data_processor - INFO - Loading and cleaning job market data
+2025-06-06 21:10:03,966 - analytics.data_processor - INFO - Loaded 250 job records
+2025-06-06 21:10:04,004 - analytics.data_processor - INFO - Removed 0 duplicate records
+2025-06-06 21:10:04,007 - analytics.data_processor - INFO - Cleaned data: 250 records remaining
+2025-06-06 21:10:30,837 - root - INFO - Logging system initialized
+2025-06-06 21:10:30,847 - analytics.data_processor - INFO - Loading and cleaning job market data
+2025-06-06 21:10:30,855 - analytics.data_processor - INFO - Loaded 250 job records
+2025-06-06 21:10:30,904 - analytics.data_processor - INFO - Removed 0 duplicate records
+2025-06-06 21:10:30,907 - analytics.data_processor - INFO - Cleaned data: 250 records remaining
+2025-06-06 21:10:51,586 - root - INFO - Logging system initialized
+2025-06-06 21:10:51,592 - analytics.data_processor - INFO - Loading and cleaning job market data
+2025-06-06 21:10:51,599 - analytics.data_processor - INFO - Loaded 250 job records
+2025-06-06 21:10:51,635 - analytics.data_processor - INFO - Removed 0 duplicate records
+2025-06-06 21:10:51,639 - analytics.data_processor - INFO - Cleaned data: 250 records remaining
+2025-06-06 21:10:54,807 - root - INFO - Logging system initialized
+2025-06-06 21:10:54,812 - analytics.data_processor - INFO - Loading and cleaning job market data
+2025-06-06 21:10:54,819 - analytics.data_processor - INFO - Loaded 250 job records
+2025-06-06 21:10:54,861 - analytics.data_processor - INFO - Removed 0 duplicate records
+2025-06-06 21:10:54,866 - analytics.data_processor - INFO - Cleaned data: 250 records remaining
+2025-06-06 21:11:09,117 - root - INFO - Logging system initialized
+2025-06-06 21:11:09,126 - analytics.data_processor - INFO - Loading and cleaning job market data
+2025-06-06 21:11:09,132 - analytics.data_processor - INFO - Loaded 250 job records
+2025-06-06 21:11:09,173 - analytics.data_processor - INFO - Removed 0 duplicate records
+2025-06-06 21:11:09,181 - analytics.data_processor - INFO - Cleaned data: 250 records remaining
+2025-06-06 21:11:15,830 - root - INFO - Logging system initialized
+2025-06-06 21:11:15,836 - analytics.data_processor - INFO - Loading and cleaning job market data
+2025-06-06 21:11:15,844 - analytics.data_processor - INFO - Loaded 250 job records
+2025-06-06 21:11:15,878 - analytics.data_processor - INFO - Removed 0 duplicate records
+2025-06-06 21:11:15,881 - analytics.data_processor - INFO - Cleaned data: 250 records remaining
+2025-06-06 21:11:17,270 - root - INFO - Logging system initialized
+2025-06-06 21:11:17,276 - analytics.data_processor - INFO - Loading and cleaning job market data
+2025-06-06 21:11:17,288 - analytics.data_processor - INFO - Loaded 250 job records
+2025-06-06 21:11:17,324 - analytics.data_processor - INFO - Removed 0 duplicate records
+2025-06-06 21:11:17,329 - analytics.data_processor - INFO - Cleaned data: 250 records remaining
+2025-06-06 21:12:22,099 - root - INFO - Logging system initialized
+2025-06-06 21:12:22,105 - analytics.data_processor - INFO - Loading and cleaning job market data
+2025-06-06 21:12:22,113 - analytics.data_processor - INFO - Loaded 250 job records
+2025-06-06 21:12:22,164 - analytics.data_processor - INFO - Removed 0 duplicate records
+2025-06-06 21:12:22,169 - analytics.data_processor - INFO - Cleaned data: 250 records remaining
+2025-06-09 07:28:54,062 - root - INFO - Logging system initialized
+2025-06-09 07:34:58,982 - root - INFO - Logging system initialized
+2025-06-09 07:35:00,311 - config.database - INFO - Database initialized successfully
+2025-06-09 07:35:00,312 - config.database - INFO - Database initialized successfully
+2025-06-09 07:35:00,315 - analytics.data_processor - INFO - Loading and cleaning job market data
+2025-06-09 07:35:00,317 - analytics.data_processor - INFO - Loaded 250 job records
+2025-06-09 07:35:00,347 - analytics.data_processor - INFO - Removed 0 duplicate records
+2025-06-09 07:35:00,350 - analytics.data_processor - INFO - Cleaned data: 250 records remaining
+2025-06-09 07:35:03,086 - root - INFO - Logging system initialized
+2025-06-09 07:35:03,101 - analytics.data_processor - INFO - Loading and cleaning job market data
+2025-06-09 07:35:03,109 - analytics.data_processor - INFO - Loaded 250 job records
+2025-06-09 07:35:03,149 - analytics.data_processor - INFO - Removed 0 duplicate records
+2025-06-09 07:35:03,153 - analytics.data_processor - INFO - Cleaned data: 250 records remaining
