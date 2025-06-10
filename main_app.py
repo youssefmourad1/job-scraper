@@ -122,10 +122,12 @@ def run_scraper_async(scraper_name, scraper_class):
     """Run scraper asynchronously"""
     try:
         scraper = scraper_class()
+        if 'scraping_progress' not in st.session_state:
+            st.session_state.scraping_progress = {}
         st.session_state.scraping_progress[scraper_name] = "🔄 Starting..."
         
         # Run scraper
-        asyncio.run(scraper.scrape_all())
+        asyncio.run(scraper.scrape_job_details())
         
         st.session_state.scraping_progress[scraper_name] = "✅ Completed"
     except Exception as e:
@@ -779,7 +781,7 @@ def main():
         else:
             st.warning("⚠️ No data available. Please start with Data Collection.")
     
-    elif page == "�� Data Collection":
+    elif page == "🔄 Data Collection":
         scraping_management_section()
     
     elif page == "📊 Market Analytics":
