@@ -245,17 +245,16 @@ def display_scraping_interface():
     if not st.session_state.scraping_in_progress:
         if st.button("🔥 Start Data Collection", type="primary", use_container_width=True):
             run_scraping_session(rekrute_enabled, maroc_enabled, max_pages)
-                else:
-        st.markdown("""
-        <div class="status-info">
-            <strong>🔄 Scraping in Progress...</strong><br>
-            Please wait while we collect the latest job data.
-        </div>
-        """, unsafe_allow_html=True)
-        
-        if st.button("⏹️ Stop Scraping", type="secondary"):
-            st.session_state.scraping_in_progress = False
-            st.experimental_rerun()
+            st.markdown("""
+            <div class="status-info">
+                <strong>🔄 Scraping in Progress...</strong><br>
+                Please wait while we collect the latest job data.
+            </div>
+            """, unsafe_allow_html=True)
+            
+            if st.button("⏹️ Stop Scraping", type="secondary"):
+                st.session_state.scraping_in_progress = False
+                st.experimental_rerun()
 
 def run_scraping_session(rekrute_enabled: bool, maroc_enabled: bool, max_pages: int):
     """Run the scraping session"""
@@ -397,9 +396,8 @@ def run_scraping_session(rekrute_enabled: bool, maroc_enabled: bool, max_pages: 
 # ----------------------
 st.title("Rekrute.com Job Scraper")
 DB_PATH = "jobs.db"
-scraper = RekruteScraper(base_url="https://www.rekrute.com/fr/offres.html?s=3&p=1&o=1",
-                        db_path=DB_PATH, max_workers=5)
-
+scraper = RekruteScraper( )
+import os 
 # Check for existing data
 has_data = False
 if os.path.exists(DB_PATH):

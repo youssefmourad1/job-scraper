@@ -79,9 +79,22 @@ You can customize the application behavior using environment variables:
 docker run -p 8501:8501 \
   -e STREAMLIT_SERVER_PORT=8501 \
   -e STREAMLIT_SERVER_ADDRESS=0.0.0.0 \
+  -e SELENIUM_HEADLESS=true \
+  -e CHROME_BIN=/usr/bin/chromium \
   -v $(pwd)/data:/app/data \
   job-market-analyzer
 ```
+
+### Available Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `STREAMLIT_SERVER_PORT` | `8501` | Streamlit server port |
+| `STREAMLIT_SERVER_ADDRESS` | `0.0.0.0` | Streamlit server address |
+| `SELENIUM_HEADLESS` | `true` | Run browser in headless mode |
+| `CHROME_BIN` | `/usr/bin/chromium` | Chrome/Chromium binary path |
+| `CHROMEDRIVER_PATH` | `/usr/bin/chromedriver` | ChromeDriver binary path |
+| `DISPLAY` | `:99` | X11 display for GUI applications |
 
 ## Production Deployment
 
@@ -130,6 +143,22 @@ docker run -p 8501:8501 \
    The Dockerfile automatically downloads required NLTK data. If issues persist, rebuild the image:
    ```bash
    docker build --no-cache -t job-market-analyzer .
+   ```
+
+4. **Browser automation issues:**
+   If Selenium/browser automation fails, check the browser setup:
+   ```bash
+   # Test browser setup inside container
+   docker exec -it job-market-analyzer python -c "from utils.browser_setup import test_browser_setup; print(test_browser_setup())"
+   
+   # Check browser environment
+   docker exec -it job-market-analyzer python -c "from utils.browser_setup import validate_browser_environment; print(validate_browser_environment())"
+   ```
+
+5. **Memory issues with browser automation:**
+   Increase Docker memory limits:
+   ```bash
+   docker run --memory=2g --memory-swap=2g -p 8501:8501 job-market-analyzer
    ```
 
 ### Viewing Logs

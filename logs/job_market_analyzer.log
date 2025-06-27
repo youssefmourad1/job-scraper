@@ -320,3 +320,27 @@
 2025-06-09 07:35:03,109 - analytics.data_processor - INFO - Loaded 250 job records
 2025-06-09 07:35:03,149 - analytics.data_processor - INFO - Removed 0 duplicate records
 2025-06-09 07:35:03,153 - analytics.data_processor - INFO - Cleaned data: 250 records remaining
+2025-06-27 17:10:24,494 - root - INFO - Logging system initialized
+2025-06-27 17:10:28,617 - config.database - INFO - Database initialized successfully
+2025-06-27 17:10:28,618 - config.database - INFO - Database initialized successfully
+2025-06-27 17:11:21,549 - root - INFO - Logging system initialized
+2025-06-27 17:11:21,556 - config.database - INFO - Database initialized successfully
+2025-06-27 17:11:21,556 - config.database - INFO - Database initialized successfully
+2025-06-27 17:11:31,464 - root - INFO - Logging system initialized
+2025-06-27 17:11:31,468 - config.database - INFO - Database initialized successfully
+2025-06-27 17:11:31,468 - config.database - INFO - Database initialized successfully
+2025-06-27 17:11:38,176 - root - INFO - Logging system initialized
+2025-06-27 17:11:38,180 - config.database - INFO - Database initialized successfully
+2025-06-27 17:11:38,181 - config.database - INFO - Database initialized successfully
+2025-06-27 17:11:38,181 - config.database - INFO - Database initialized successfully
+2025-06-27 17:11:38,182 - scrapers - INFO - Initialized Rekrute scraper
+2025-06-27 17:11:45,845 - root - INFO - Logging system initialized
+2025-06-27 17:11:45,848 - config.database - INFO - Database initialized successfully
+2025-06-27 17:11:45,849 - config.database - INFO - Database initialized successfully
+2025-06-27 17:11:45,849 - config.database - INFO - Database initialized successfully
+2025-06-27 17:11:45,850 - scrapers - INFO - Initialized Rekrute scraper
+2025-06-27 17:11:49,979 - root - INFO - Logging system initialized
+2025-06-27 17:11:49,982 - config.database - INFO - Database initialized successfully
+2025-06-27 17:11:49,983 - config.database - INFO - Database initialized successfully
+2025-06-27 17:11:49,985 - config.database - INFO - Database initialized successfully
+2025-06-27 17:11:49,985 - scrapers - INFO - Initialized Rekrute scraper

@@ -99,6 +99,13 @@ if 'scrapers_running' not in st.session_state:
 if 'scraping_progress' not in st.session_state:
     st.session_state.scraping_progress = {}
 
+# Debug: Check and fix inconsistent states
+if st.session_state.scrapers_running and st.session_state.scraping_progress:
+    # If marked as running but all scrapers are done, fix the state
+    all_done = all("✅" in status or "❌" in status for status in st.session_state.scraping_progress.values())
+    if all_done:
+        st.session_state.scrapers_running = False
+
 def load_job_data():
     """Load and cache job market data"""
     try:
@@ -118,21 +125,42 @@ def load_job_data():
         st.error(f"Error loading data: {e}")
         return pd.DataFrame()
 
-def run_scraper_async(scraper_name, scraper_class):
+def run_scraper_async(scraper_name, scraper_class, max_pages=None):
     """Run scraper asynchronously"""
     try:
-        scraper = scraper_class()
+        # Ensure session state exists
         if 'scraping_progress' not in st.session_state:
             st.session_state.scraping_progress = {}
-        st.session_state.scraping_progress[scraper_name] = "🔄 Starting..."
         
-        # Run scraper
-        asyncio.run(scraper.scrape_job_details())
+        # Update progress to starting
+        st.session_state.scraping_progress[scraper_name] = "🔄 Initializing..."
         
-        st.session_state.scraping_progress[scraper_name] = "✅ Completed"
+        # Initialize scraper
+        scraper = scraper_class()
+        st.session_state.scraping_progress[scraper_name] = "🔄 Running scraper..."
+        
+        # Run complete scraping session
+        session_result = asyncio.run(scraper.run_scraping_session(max_pages=max_pages))
+        
+        # Update progress with results
+        if session_result and hasattr(session_result, 'new_jobs'):
+            st.session_state.scraping_progress[scraper_name] = (
+                f"✅ Completed - {session_result.new_jobs} new jobs, "
+                f"{session_result.updated_jobs} updated"
+            )
+        else:
+            st.session_state.scraping_progress[scraper_name] = "✅ Completed successfully"
+            
     except Exception as e:
-        st.session_state.scraping_progress[scraper_name] = f"❌ Error: {str(e)}"
+        error_msg = f"❌ Error: {str(e)}"
+        st.session_state.scraping_progress[scraper_name] = error_msg
         logger.error(f"Scraper {scraper_name} failed: {e}")
+    
+    # Check if all scrapers are done
+    if st.session_state.scraping_progress:
+        all_done = all("✅" in status or "❌" in status for status in st.session_state.scraping_progress.values())
+        if all_done:
+            st.session_state.scrapers_running = False
 
 def scraping_management_section():
     """Data scraping management interface"""
@@ -145,36 +173,72 @@ def scraping_management_section():
     Collect fresh job market data from MarocAnnonce and Rekrute to ensure up-to-date analysis.
     """)
     
+    # Add a reset button for debugging
+    col_reset1, col_reset2 = st.columns([3, 1])
+    with col_reset2:
+        if st.button("🔄 Reset Status"):
+            st.session_state.scrapers_running = False
+            st.session_state.scraping_progress = {}
+            st.success("Status reset!")
+            st.rerun()
+    
+    # Display current status
+    st.info(f"**Current Status**: {'🔄 Running' if st.session_state.scrapers_running else '✅ Ready'}")
+    
+    # Scraping configuration
+    col_config1, col_config2 = st.columns(2)
+    with col_config1:
+        max_pages = st.number_input("📄 Max pages per source", min_value=1, max_value=100, value=10, 
+                                   help="Limit the number of pages to scrape (for faster testing)")
+    with col_config2:
+        st.markdown("**💡 Tip:** Start with fewer pages for testing, then increase for full data collection")
+    
     # Scraping controls
     col1, col2, col3 = st.columns(3)
+    
+    # Check if any scrapers are actually running by looking at progress
+    actually_running = any("🔄" in status for status in st.session_state.scraping_progress.values()) if st.session_state.scraping_progress else False
+    
+    # Override the session state if no scrapers are actually running
+    if st.session_state.scrapers_running and not actually_running:
+        # Check if all scrapers have completed or failed
+        all_done = all("✅" in status or "❌" in status for status in st.session_state.scraping_progress.values()) if st.session_state.scraping_progress else True
+        if all_done:
+            st.session_state.scrapers_running = False
     
     with col1:
         if st.button("🎯 Scrape MarocAnnonce", disabled=st.session_state.scrapers_running):
             st.session_state.scrapers_running = True
+            st.session_state.scraping_progress["MarocAnnonce"] = "🔄 Starting..."
             thread = threading.Thread(
                 target=run_scraper_async, 
-                args=("MarocAnnonce", MarocAnnonceScraper)
+                args=("MarocAnnonce", MarocAnnonceScraper, max_pages)
             )
             thread.start()
+            st.rerun()
     
     with col2:
         if st.button("🔍 Scrape Rekrute", disabled=st.session_state.scrapers_running):
             st.session_state.scrapers_running = True
+            st.session_state.scraping_progress["Rekrute"] = "🔄 Starting..."
             thread = threading.Thread(
                 target=run_scraper_async, 
-                args=("Rekrute", RekruteScraper)
+                args=("Rekrute", RekruteScraper, max_pages)
             )
             thread.start()
+            st.rerun()
     
     with col3:
         if st.button("🚀 Scrape All Sources", disabled=st.session_state.scrapers_running):
             st.session_state.scrapers_running = True
             for scraper_name, scraper_class in [("MarocAnnonce", MarocAnnonceScraper), ("Rekrute", RekruteScraper)]:
+                st.session_state.scraping_progress[scraper_name] = "🔄 Starting..."
                 thread = threading.Thread(
                     target=run_scraper_async, 
-                    args=(scraper_name, scraper_class)
+                    args=(scraper_name, scraper_class, max_pages)
                 )
                 thread.start()
+            st.rerun()
     
     # Progress display
     if st.session_state.scraping_progress:
@@ -182,16 +246,41 @@ def scraping_management_section():
         for scraper, status in st.session_state.scraping_progress.items():
             st.write(f"**{scraper}**: {status}")
         
-        # Auto-refresh
-        if st.session_state.scrapers_running:
-            time.sleep(2)
-            st.rerun()
+        # Check if scrapers are still running
+        still_running = any("🔄" in status for status in st.session_state.scraping_progress.values())
         
-        # Reset when all complete
-        all_complete = all("✅" in status or "❌" in status for status in st.session_state.scraping_progress.values())
-        if all_complete and st.session_state.scrapers_running:
+        if still_running:
+            # Auto-refresh while running
+            st.info("🔄 Scraping in progress... Page will refresh automatically.")
+            time.sleep(3)
+            st.rerun()
+        else:
+            # All scrapers completed
+            if st.session_state.scrapers_running:
+                st.session_state.scrapers_running = False
+                st.success("🎉 All scraping completed! Data updated.")
+                
+                # Add option to clear progress
+                if st.button("🧹 Clear Progress Log"):
+                    st.session_state.scraping_progress = {}
+                    st.rerun()
+    
+    # Debug panel (can be hidden in production)
+    with st.sidebar.expander("🔧 Debug Panel", expanded=False):
+        st.write("**Scraper Status:**")
+        st.write(f"Running: {st.session_state.scrapers_running}")
+        st.write(f"Progress entries: {len(st.session_state.scraping_progress)}")
+        
+        if st.session_state.scraping_progress:
+            st.write("**Current Progress:**")
+            for name, status in st.session_state.scraping_progress.items():
+                st.write(f"• {name}: {status}")
+        
+        if st.button("🔄 Force Reset All"):
             st.session_state.scrapers_running = False
-            st.success("🎉 Scraping completed! Data updated.")
+            st.session_state.scraping_progress = {}
+            st.success("Reset complete!")
+            st.rerun()
     
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -537,7 +626,8 @@ def topic_modeling_section(df):
                 modeler = JobTopicModeler()
                 
                 if modeler.load_data(source_filter=selected_source if selected_source != "All Sources" else None):
-                    st.success(f"✅ Loaded {len(modeler.df)} records")
+                    if modeler.df is not None:
+                        st.success(f"✅ Loaded {len(modeler.df)} records")
                     
                     if modeler.preprocess_text(text_column=text_source):
                         if modeler.create_features(max_features=max_features):
@@ -709,6 +799,62 @@ Keep it professional and actionable for business decision-makers.
         logger.error(f"Error calling Grok API: {e}")
         return None
 
+def advanced_eda_section(df):
+    """Advanced EDA using the JobMarketAnalyzer class"""
+    st.markdown('<div class="section-card">', unsafe_allow_html=True)
+    st.markdown("## 🔬 Advanced Data Analysis & EDA")
+    
+    st.markdown("""
+    **Professional-grade Exploratory Data Analysis with ML-powered insights**
+    
+    This section provides comprehensive data analysis including:
+    - Advanced data preprocessing and cleaning
+    - Skills extraction and analysis
+    - Trend prediction and market insights
+    - Data quality assessment
+    - Interactive visualizations
+    """)
+    
+    # Initialize the analyzer
+    if st.button("🚀 Run Advanced Analysis", type="primary"):
+        with st.spinner("🔄 Initializing advanced analysis..."):
+            try:
+                # Import the new analyzer
+                from data_analysis import JobMarketAnalyzer
+                
+                # Initialize analyzer with database path
+                analyzer = JobMarketAnalyzer(db_path="data/job_market.db")
+                
+                if analyzer.processed_df is not None:
+                    st.success(f"✅ Loaded and processed {len(analyzer.processed_df)} job records")
+                    
+                    # Generate the comprehensive dashboard
+                    analyzer.generate_streamlit_dashboard()
+                    
+                    # Export analysis report
+                    if st.button("📄 Export Analysis Report"):
+                        report_path = analyzer.export_analysis_report()
+                        st.success(f"📁 Report exported to: {report_path}")
+                        
+                        # Provide download link
+                        with open(report_path, 'r', encoding='utf-8') as f:
+                            report_data = f.read()
+                        
+                        st.download_button(
+                            label="⬇️ Download Analysis Report",
+                            data=report_data,
+                            file_name=report_path.split('/')[-1],
+                            mime="application/json"
+                        )
+                else:
+                    st.error("❌ No data available for analysis. Please run data collection first.")
+                    
+            except Exception as e:
+                st.error(f"❌ Analysis failed: {str(e)}")
+                st.exception(e)
+    
+    st.markdown('</div>', unsafe_allow_html=True)
+
 def main():
     """Main application function"""
     # Header
@@ -725,7 +871,7 @@ def main():
     # Navigation
     page = st.sidebar.selectbox(
         "📋 Navigation",
-        ["🏠 Overview", "🔄 Data Collection", "📊 Market Analytics", "📋 Descriptive Stats", "🤖 Topic Modeling"]
+        ["🏠 Overview", "🔄 Data Collection", "📊 Market Analytics", "🔬 Advanced EDA", "📋 Descriptive Stats", "🤖 Topic Modeling"]
     )
     
     if page == "🏠 Overview":
@@ -755,17 +901,18 @@ def main():
                             modeler.fit_kmeans(n_clusters=5)  # Example with KMeans
                             report_data = modeler.generate_report_data()
                             
-                            # Add Llama4 summary via Grok
-                            grok_summary = generate_grok_llama4_summary(report_data)
-                            if grok_summary:
-                                report_data['ai_summary'] = grok_summary
-                            
-                            # Generate PDF
-                            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                            output_path = f'reports/comprehensive_analysis_{timestamp}.pdf'
-                            
-                            if generate_comprehensive_report(report_data, output_path):
-                                st.success("✅ Report generated successfully!")
+                            if report_data:  # Check if report_data is not None
+                                # Add Llama4 summary via Grok
+                                grok_summary = generate_grok_llama4_summary(report_data)
+                                if grok_summary:
+                                    report_data['ai_summary'] = grok_summary
+                                
+                                # Generate PDF
+                                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                                output_path = f'reports/comprehensive_analysis_{timestamp}.pdf'
+                                
+                                if generate_comprehensive_report(report_data, output_path):
+                                    st.success("✅ Report generated successfully!")
                                 
                                 # Download button
                                 if os.path.exists(output_path):
@@ -802,6 +949,12 @@ def main():
         else:
             st.warning("⚠️ No data available for topic modeling.")
     
+    elif page == "🔬 Advanced EDA":
+        if not df.empty:
+            advanced_eda_section(df)
+        else:
+            st.warning("📊 No data available. Please run data collection first.")
+    
     # Footer
     st.markdown("---")
     st.markdown("""
@@ -812,4 +965,4 @@ def main():
     """, unsafe_allow_html=True)
 
 if __name__ == "__main__":
-    main() 
+    main()
